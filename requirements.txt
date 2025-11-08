@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+beautifulsoup4
+requests
+lxml
+selenium
+celery[redis]
+redis
+yookassa
+python-dotenv
+psycopg2-binary
+scikit-learn
+python-multipart
