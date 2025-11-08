@@ -3,9 +3,21 @@ from bs4 import BeautifulSoup
 import redis
 from datetime import timedelta
 from os import getenv
+import os  # Для load_dotenv, если нужно
 
-r = redis.from_url(getenv('REDIS_URL'))
+# Загружаем .env, на всякий
+from dotenv import load_dotenv
+load_dotenv()
 
+redis_url = getenv('REDIS_URL')
+if not redis_url or not redis_url.startswith(('redis://', 'rediss://')):
+    print("🛡️ REDIS_URL хуёвый или отсутствует! Использую dummy (для теста, но в проде фикс env)")
+    r = None  # Отключаем кэш, чтоб не падал
+else:
+    print(f"🔥 Redis подключён: {redis_url[:20]}...")  # Дебаг в логах Render
+    r = redis.from_url(redis_url)
+
+# Остальной код без изменений (parse_all_markets и функции)
 def parse_all_markets(query):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     markets = {
